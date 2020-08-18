@@ -37,14 +37,21 @@ function save() {
 			pull = JSON.parse(pull);
 			
 			if (localStorage.getItem('full') === null) {
-					var beckon = [];
-				} else {
-					var beckon = JSON.parse(localStorage.getItem('full'));
+				var beckon = [];
+			} else {
+				var beckon = JSON.parse(localStorage.getItem('full'));
 			}
 				
 			let car = beckon.find(beckon => beckon.date === pull['date']);
 			
-			if (pull['date'] != date.toLocaleDateString() && (car == null || car == undefined)) {
+			if (pull['date'] != date.toLocaleDateString() && (car == null || car == undefined || (car != null && car != pull))) {
+				for (var i = 0; i < beckon.length; i++) { 
+					if (beckon[i]["date"] === pull['date']) { 
+						beckon.splice(i, 1);
+						i--; 
+					}
+				}
+
 				beckon.push(pull);
 				update('full', JSON.stringify(beckon));
 				
@@ -72,6 +79,24 @@ function save() {
 	}
 }
 
+function full(today) {
+	if (localStorage.getItem('full') === null) {
+		var callback = [];
+	} else {
+		var callback = JSON.parse(localStorage.getItem('full'));
+	}
+	
+	for (var i = 0; i < callback.length; i++) { 
+		if (callback[i]["date"] === date.toLocaleDateString()) { 
+			callback.splice(i, 1); 
+			i--; 
+		}
+	}
+	
+	callback.push(today);
+	update('full', JSON.stringify(callback));
+}
+
 // Save data on window close
 window.onbeforeunload = function() {
 	save();
@@ -85,7 +110,15 @@ setInterval(function() {
 	
 	// var individuals = fetch[9];
 	// console.log(individuals["score"]);
-}, 600000);
+}, 10000);
+// }, 600000);
+
+setInterval(function() {
+	var total = read("today");
+	total = JSON.parse(total);
+			
+	full(total)
+}, 3600000);
 
 function update(key, value) {
 	return localStorage.setItem(key, value);

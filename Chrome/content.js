@@ -48,12 +48,6 @@ function save() {
 				beckon.push(pull);
 				update('full', JSON.stringify(beckon));
 				
-				var fetch = JSON.parse(localStorage.getItem('full'));
-				console.log(fetch);
-				
-				// var individuals = fetch[9];
-				// console.log(individuals["score"]);
-				
 				var reboot = {'date': date.toLocaleDateString(), 'score': 0, 'wordCount': 0};
 				update('today', JSON.stringify(reboot));
 				
@@ -87,11 +81,13 @@ window.onbeforeunload = function() {
 
 setInterval(function() {
 	save();
-}, 10000);
-// }, 600000);
-
-setInterval(function() {
 	
+	// var fetch = JSON.parse(localStorage.getItem('full'));
+	// console.log(fetch);
+	
+	// var individuals = fetch[9];
+	// console.log(individuals["score"]);
+// }, 10000);
 }, 600000);
 
 function update(key, value) {

@@ -36,8 +36,6 @@ function save() {
 			var pull = read("today");
 			pull = JSON.parse(pull);
 			
-			var callback = read("full");
-			
 			if (localStorage.getItem('full') === null) {
 					var beckon = [];
 				} else {
@@ -47,14 +45,8 @@ function save() {
 			let car = beckon.find(beckon => beckon.date === pull['date']);
 			
 			if (pull['date'] != date.toLocaleDateString() && (car == null || car == undefined)) {
-				if (localStorage.getItem('full') === null) {
-					var bookmarks = [];
-				} else {
-					var bookmarks = JSON.parse(localStorage.getItem('full'));
-				}
-
-				bookmarks.push(pull);
-				update('full', JSON.stringify(bookmarks));
+				beckon.push(pull);
+				update('full', JSON.stringify(beckon));
 				
 				var fetch = JSON.parse(localStorage.getItem('full'));
 				console.log(fetch);

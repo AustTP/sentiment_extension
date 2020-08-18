@@ -36,7 +36,17 @@ function save() {
 			var pull = read("today");
 			pull = JSON.parse(pull);
 			
-			if (pull['date'] != date.toLocaleDateString()) {
+			var callback = read("full");
+			
+			if (localStorage.getItem('full') === null) {
+					var beckon = [];
+				} else {
+					var beckon = JSON.parse(localStorage.getItem('full'));
+			}
+				
+			let car = beckon.find(beckon => beckon.date === pull['date']);
+			
+			if (pull['date'] != date.toLocaleDateString() && (car == null || car == undefined)) {
 				if (localStorage.getItem('full') === null) {
 					var bookmarks = [];
 				} else {
@@ -66,6 +76,8 @@ function save() {
 				var object = {'date': date.toLocaleDateString(), 'score': parse["score"], 'wordCount': parse["wordCount"]};
 				update('today', JSON.stringify(object));
 				
+				console.log(object);
+				
 				chrome.runtime.sendMessage({"message": "returnScore", "wordCount": parse["wordCount"], "score": parse["score"]});
 			});
 		}
@@ -74,10 +86,6 @@ function save() {
 		data = {};
 		shouldSave = false;
 	}
-}
-
-function autoDelete() {
-	// remove();
 }
 
 // Save data on window close
@@ -91,11 +99,8 @@ setInterval(function() {
 // }, 600000);
 
 setInterval(function() {
-}, 600000);
-
-setInterval(function() {
 	
-}, 86400000);
+}, 600000);
 
 function update(key, value) {
 	return localStorage.setItem(key, value);
@@ -109,6 +114,6 @@ function read(key) {
 	}
 }
 
-function remove(key) {
-	return localStorage.removeItem(key);
-}
+// function remove(key) {
+	// return localStorage.removeItem(key);
+// }

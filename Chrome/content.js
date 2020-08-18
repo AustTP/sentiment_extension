@@ -87,7 +87,6 @@ setInterval(function() {
 	
 	// var individuals = fetch[9];
 	// console.log(individuals["score"]);
-// }, 10000);
 }, 600000);
 
 function update(key, value) {

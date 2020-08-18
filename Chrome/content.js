@@ -62,8 +62,6 @@ function save() {
 				var object = {'date': date.toLocaleDateString(), 'score': parse["score"], 'wordCount': parse["wordCount"]};
 				update('today', JSON.stringify(object));
 				
-				console.log(object);
-				
 				chrome.runtime.sendMessage({"message": "returnScore", "wordCount": parse["wordCount"], "score": parse["score"]});
 			});
 		}

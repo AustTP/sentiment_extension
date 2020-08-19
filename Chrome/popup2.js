@@ -9,25 +9,7 @@ var date = new Date();
 document.addEventListener('DOMContentLoaded', function() {
 	chrome.storage.sync.get(["toSave"], function(logs) {
 		for (var key in logs) {
-			// var splits = logs[key].split("_");
-			
-			count += parseInt(logs["wordCount"]);
-			score += parseInt(logs["score"]);
-			
-			// console.log(key + "_" + logs[key]);
-			
-			// let car = logs[key].find(car => car.date === date.toLocaleDateString());
-			// console.log(car);
-			// for (var i = 0; i < logs[key].length; i++) { 
-				// if (logs[key][i]["date"] === date.toLocaleDateString()) { 
-					// array2.push(logs[key][i]);
-					// i--; 
-				// }
-			// }
-				
-			// if (logs != null) {
-				array2.push(logs[key]);
-			// }
+			array2 = array2.concat(logs[key]);
 		}
 	});
 });
@@ -35,23 +17,15 @@ document.addEventListener('DOMContentLoaded', function() {
 chrome.runtime.onMessage.addListener (
 	function (request, sender, sendResponse) {		
 		if (request.message === "returnScore") {
-			// toSave[time] = {"date": request.date, "wordCount": request.wordCount, "score": request.score};
 			array2.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
 			
-			chrome.storage.sync.set({"toSave": array2}, function() { console.log("Saved", array2); });
+			const res = Object.values(array2.reduce((acc, {wordCount, score, ...r}) => {
+				const key = JSON.stringify(r);
+				acc[key] = (acc[key]  || {...r, wordCount: 0, score:0});
+				return (acc[key].score += score, acc[key].wordCount += wordCount, acc);
+			}, {}));
 			
-			// chrome.storage.sync.get(function(logs) {
-				// var toDelete = [];
-				
-				// for (var key in logs) {
-					// // if (key < endDate || isNaN(key) || key < 10000) { // Restrict by time and remove invalid chars 
-						// toDelete.push(key);
-					// // }
-				// }
-				// chrome.storage.sync.remove(toDelete, function() {
-					// console.log(toDelete.length + " entries deleted");
-				// });
-			// });
+			chrome.storage.sync.set({"toSave": res}, function() { console.log("Saved", res); });
 		}		
 	}
 );

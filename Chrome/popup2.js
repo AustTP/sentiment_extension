@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener (
 			
 			const res = Object.values(array2.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
-				acc[key] = (acc[key]  || {...r, wordCount: 0, score:0});
+				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
 				return (acc[key].score += score, acc[key].wordCount += wordCount, acc);
 			}, {}));
 			

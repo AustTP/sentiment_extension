@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener (
 			console.log(redCars);
 
 			if (redCars.length > 0) {
-				full.push(redCars);
+				full.concat(redCars);
 				console.log(full);
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				

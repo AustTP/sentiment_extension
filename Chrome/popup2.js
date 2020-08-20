@@ -13,11 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.storage.sync.get(["calendar"], function(logs) {
 		for (var key in logs) {
+			console.log(key + "_" + logs + "_" + logs[key]);
 			full = full.concat(logs[key]);
 		}
 	});
 	
-	addScoreToUI(today);
+	console.log(full);
+	// addScoreToUI(today);
 });
 
 chrome.runtime.onMessage.addListener (
@@ -30,18 +32,23 @@ chrome.runtime.onMessage.addListener (
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
 				return (acc[key].score += score, acc[key].wordCount += wordCount, acc);
 			}, {}));
+			
+			console.log(res);
 
 			let redCars = res.filter(redCars => redCars.date != date.toLocaleDateString());
+			
+			console.log(redCars);
 
 			if (redCars.length > 0) {
 				full.push(redCars);
+				console.log(full);
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				
-				var reboot = {'date': date.toLocaleDateString(), 'score': 0, 'wordCount': 0};
-				chrome.storage.sync.set({"toSave": reboot}, function() { console.log("Today", reboot); });
+				res.shift();
+				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
 			} else {
 				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
-				addScoreToUI(res);
+				// addScoreToUI(res);
 			}
 		}		
 	}
@@ -54,7 +61,7 @@ function addScoreToUI(source) {
 	for (var i = 0; i < source.length; i++) {
 		var node = document.createTextNode(source[i].date + "_" + source[i].wordCount + "_" + source[i].score);
 	}
-
+	
 	// var node = document.createTextNode(source);
 	
     para.appendChild(node);

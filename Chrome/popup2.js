@@ -6,6 +6,8 @@ var date = new Date();
 
 document.addEventListener('DOMContentLoaded', function() {
 	chrome.storage.sync.get(["toSave"], function(logs) {
+		console.log(logs);
+		
 		for (var key in logs) {
 			today = today.concat(logs[key]);
 		}
@@ -17,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	
+	// let filtered = full.filter(filtered => filtered.date.startsWith(date.getMonth() + 1) || filtered.date.startsWith(date.getMonth()));
+	// console.log(filtered);
+
 	addScoreToUI(0, 0);
 });
 
@@ -28,24 +33,30 @@ chrome.runtime.onMessage.addListener (
 			const res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
+
 				const maths = (acc[key].wordCount / (wordCount + acc[key].wordCount) * acc[key].score) + (wordCount / (wordCount + acc[key].wordCount) * score);
-				// console.log(maths.toFixed(2));
 				
-				return (maths, acc[key].wordCount += wordCount, acc);
+				return (acc[key].wordCount += wordCount, acc[key].score = maths.toFixed(2), acc);
 			}, {}));
 
 			let redCars = res.filter(redCars => redCars.date != date.toLocaleDateString());
+			let notRed = res.find(notRed => notRed.date == date.toLocaleDateString());
 
 			if (redCars.length > 0) {
-				full.concat(redCars);
+				today = [];
+				today.push(notRed);
+				
+				full = full.concat(redCars);
 
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				
-				res.shift();
-				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
+				// res.shift();
+				chrome.storage.sync.set({"toSave": today}, function() { console.log("Today", today); });
+				
+				addScoreToUI(2, 2);
 			} else {
 				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
-				// addScoreToUI(res);
+				addScoreToUI(1, 1);
 			}
 		}		
 	}

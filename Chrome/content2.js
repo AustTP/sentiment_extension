@@ -12,10 +12,13 @@ document.addEventListener("keydown", function (e) {
 	if(e.target.type != 'password') {
 		var charCode = e.keyCode;
 
-		if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 8 || charCode == 46 || charCode == 32) {
+		if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 46 || charCode == 32) {
 			log(String.fromCharCode(charCode));
-			charCount += 1;
+		} else if (charCode == 8) {
+			log("[BKSP]");
 		}
+		
+		charCount += 1;
 	}
 });
 
@@ -33,10 +36,7 @@ function log(input) {
 function save() {
 	if (shouldSave) {
 		if (charCount > 0) {
-			var pull = read("today");
-			pull = JSON.parse(pull);
-			
-			chrome.runtime.sendMessage({"message": "getScore", "text": data[time].replace("undefined", ""), "charCount": charCount, "wordCount": pull['wordCount'], "score": pull['score']}, function(response) {
+			chrome.runtime.sendMessage({"message": "getScore", "text": data[time].replace("undefined", ""), "charCount": charCount}, function(response) {
 				var score = JSON.stringify(response["Summary"]);
 				var parse = JSON.parse(score);
 				
@@ -57,27 +57,5 @@ window.onbeforeunload = function() {
 
 setInterval(function() {
 	save();
-	
-	// var fetch = JSON.parse(localStorage.getItem('full'));
-	// console.log(fetch);
-	
-	// var individuals = fetch[9];
-	// console.log(individuals["score"]);
 }, 10000);
-// }, 600000);
-
-function update(key, value) {
-	return localStorage.setItem(key, value);
-}
-
-function read(key) {
-	if (localStorage.getItem(key) === null) {
-		return 0;
-	} else {
-		return localStorage.getItem(key);
-	}
-}
-
-// function remove(key) {
-	// return localStorage.removeItem(key);
-// }
+// }, 900000);

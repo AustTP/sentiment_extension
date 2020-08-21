@@ -13,13 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.storage.sync.get(["calendar"], function(logs) {
 		for (var key in logs) {
-			console.log(key + "_" + logs + "_" + logs[key]);
 			full = full.concat(logs[key]);
 		}
 	});
 	
-	console.log(full);
-	// addScoreToUI(today);
+	addScoreToUI(0, 0);
 });
 
 chrome.runtime.onMessage.addListener (
@@ -30,18 +28,17 @@ chrome.runtime.onMessage.addListener (
 			const res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
-				return (acc[key].score += score, acc[key].wordCount += wordCount, acc);
+				const maths = (acc[key].wordCount / (wordCount + acc[key].wordCount) * acc[key].score) + (wordCount / (wordCount + acc[key].wordCount) * score);
+				// console.log(maths.toFixed(2));
+				
+				return (maths, acc[key].wordCount += wordCount, acc);
 			}, {}));
-			
-			console.log(res);
 
 			let redCars = res.filter(redCars => redCars.date != date.toLocaleDateString());
-			
-			console.log(redCars);
 
 			if (redCars.length > 0) {
 				full.concat(redCars);
-				console.log(full);
+
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				
 				res.shift();
@@ -54,16 +51,12 @@ chrome.runtime.onMessage.addListener (
 	}
 );
 
-function addScoreToUI(source) {
+function addScoreToUI(score, wordCount) {
     console.log("Adding to ui");
     var para = document.createElement("p");
-	
-	for (var i = 0; i < source.length; i++) {
-		var node = document.createTextNode(source[i].date + "_" + source[i].wordCount + "_" + source[i].score);
-	}
-	
-	// var node = document.createTextNode(source);
-	
+
+    var node = document.createTextNode(score + "_" + wordCount);
+
     para.appendChild(node);
 
     var element = document.getElementById("daScore");
@@ -71,7 +64,7 @@ function addScoreToUI(source) {
     // First remove any existing score before adding new one
     if(element.firstChild) element.removeChild(element.firstChild);
     element.appendChild(para)
-    element.style.display = "block";
+    // element.style.display = "block";
 }
 
 function wait(ms){

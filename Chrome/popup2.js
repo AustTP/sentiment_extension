@@ -2,24 +2,28 @@ var toSave = {};
 var calendar = {};
 var today = [];
 var full = [];
-var date = new Date();
+var d = new Date();
+var startPatterns = [d.getMonth() + 1, d.getMonth()];
 
 document.addEventListener('DOMContentLoaded', function() {
 	chrome.storage.sync.get(["toSave"], function(logs) {
-		console.log(logs);
-		
 		for (var key in logs) {
-			today = today.concat(logs[key]);
+			today = today.push(...logs[key]);
 		}
 	});
 	
 	chrome.storage.sync.get(["calendar"], function(logs) {
 		for (var key in logs) {
-			full = full.concat(logs[key]);
+			full = full.push(...logs[key]);
 		}
 	});
 	
-	// let filtered = full.filter(filtered => filtered.date.startsWith(date.getMonth() + 1) || filtered.date.startsWith(date.getMonth()));
+	// var alter = function(element) {
+		// return element.date == d.toLocaleDateString(); //use the argument here.
+	// }
+	
+	// let filtered = today.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
+	// let filtered = today.filter(alter);
 	// console.log(filtered);
 
 	addScoreToUI(0, 0);
@@ -39,8 +43,8 @@ chrome.runtime.onMessage.addListener (
 				return (acc[key].wordCount += wordCount, acc[key].score = maths.toFixed(2), acc);
 			}, {}));
 
-			let redCars = res.filter(redCars => redCars.date != date.toLocaleDateString());
-			let notRed = res.find(notRed => notRed.date == date.toLocaleDateString());
+			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
+			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
 
 			if (redCars.length > 0) {
 				today = [];
@@ -76,6 +80,10 @@ function addScoreToUI(score, wordCount) {
     if(element.firstChild) element.removeChild(element.firstChild);
     element.appendChild(para)
     // element.style.display = "block";
+}
+
+function combinedArray(array1, array2) {
+  return [...array1, ...array2];
 }
 
 function wait(ms){

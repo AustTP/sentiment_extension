@@ -1,81 +1,73 @@
-import urllib
-import nltk
-import rake_nltk
-import requests
+import re
 import json
-from bs4 import BeautifulSoup
-
-# rake_nltk is the library needed for keyword extraction
-from rake_nltk import Metric, Rake
 
 import operator
 from nltk.corpus import stopwords
 set(stopwords.words('english'))
-from nltk.tokenize import word_tokenize, sent_tokenize
+# from nltk.tokenize import word_tokenize, sent_tokenize
 
-# Synonyms e.g., mother, mom, and mommy should be treated the same way
-# For this, use a Stemmer - an algorithm to bring words to its root word.
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Synonyms should be treated the same way. Stemmer is an algorithm to bring words to its root word.
 from nltk.stem import PorterStemmer
+
+sid = SentimentIntensityAnalyzer()
 
 class NLP:
 	def __init__(self, html):
-		# print(html['text'])
-		res = len(html['text'].split()) + int(html['wordCount'])
+		self.text = html['text']
+		
+		self.summary = ''
+		
+		# Create dictionary that will hold frequency of words in text - not including stop words
+		self.freqTable = dict()
 
-		self.summary = json.dumps({'wordCount': res, 'words': html['text'], 'score': res})
+		# Stemmer (puts pluralized, tensed words/verbs into their root form eg: agreed -> agree, flies -> fli)
+		self.ps = PorterStemmer()
 
-		# punctuation_chars = ["'", '"', ",", ".", "!", ":", ";", '#', '@']
-		# # lists of words to use
-		# positive_words = []
-		# with open("positive_words.txt") as pos_f:
-		# for lin in pos_f:
-		# if lin[0] != ';' and lin[0] != '\n':
-		# positive_words.append(lin.strip())
+		self.stopWords = set(stopwords.words('english'))
 
+		self.createSummary()
 
-		# negative_words = []
-		# with open("negative_words.txt") as pos_f:
-		# for lin in pos_f:
-		# if lin[0] != ';' and lin[0] != '\n':
-		# negative_words.append(lin.strip())
+	def applyBackspace(self):
+		while True:
+			# If you find a character followed by a backspace, remove both
+			temp = re.sub('.\b', '', self.text, count = 1)
+			
+			if len(self.text) == len(temp):
+				# now remove any backspaces from beginning of string
+				return re.sub('\b+', '', temp)
 
-	# def strip_punctuation(x):
-		# for char in punctuation_chars:
-		# x = x.replace(char, "")
-		# return x
+			self.text = temp
+			
+	# def tally(self, words):
+		# for word in words:
+			# word = word.lower()
+			
+			# if word in self.stopWords:
+				# continue
+				
+			# Pass every word by the stemmer before adding it to our freqTable
+			# It is important to stem every word when going through each sentence before adding the score of the words in it.
+			# word = self.ps.stem(word)
+			
+			# if word in self.freqTable:
+				# self.freqTable[word] += 1
+			# else:
+				# self.freqTable[word] = 1
 
-	# def get_pos(strsentence):
-		# strsentence = strip_punctuation(strsentence)
-		# strsentence = strsentence.lower()
-		# spliting = strsentence.split()
-		# count = 0
-		# for word in spliting:
-		# if word in positive_words:
-		# count += 1
-		# return count
+	def createSummary(self):
+		try:
+			self.applyBackspace()
+			
+			# Tokenize
+			# words = word_tokenize(self.text)
 
-	# def get_neg(strsentence):
-		# strsentence = strip_punctuation(strsentence)
-		# strsentence = strsentence.lower()
-		# spliting = strsentence.split()
-		# count = 0
-		# for word in spliting:
-		# if word in negative_words:
-		# count += 1
-		# return count
+			# Tally occurrences into freqTable
+			# self.tally(words)
+            
+			self.summary = json.dumps({'wordCount': len(self.text.split()), 'words': self.text, 'score': sid.polarity_scores(self.text)['compound']})
 
-		# read_file = file_open.readlines()
-		# print(read_file)
-
-	# def writedataonfile(resultingdatafile):
-		# resultingdatafile.write("Number of Retweets, Number of Replies, Positive Score, Negative Score, Net Score")
-		# resultingdatafile.write("\n")
-
-	# for eachline in read_file[1:]:
-	# eachline = eachline.strip().split(',')
-	# resultingdatafile.write("{}, {}, {}, {}, {}".format(eachline[1], eachline[2], get_pos(eachline[0]), get_neg(eachline[0]), (get_pos(eachline[0])-get_neg(eachline[0]))))    
-	# resultingdatafile.write("\n")
-
-	# writedataonfile(resultingdatafile)
-	# file_open.close()
-	# resultingdatafile.close()
+		except Exception as e:
+			print(str(e))
+			raise e

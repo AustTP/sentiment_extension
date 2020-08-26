@@ -72,9 +72,9 @@ data.forEach(function(d) {
 });
 
 /* Scale */
-var xScale = d3.scaleTime()
-	.domain(d3.extent(data[0].values, d => d.date))
-	.range([0, width - margin]);
+var xScale = d3.scaleLinear()
+	.domain([1, 31])
+	.range([1, width - margin]);
 
 var yScale = d3.scaleLinear()
 	.domain([0, d3.max(data[0].values, d => d.price)])
@@ -125,18 +125,18 @@ lines.selectAll("circle-group")
 	.style('opacity', circleOpacity);
 
 /* Add Axis into SVG */
-var xAxis = d3.axisBottom(xScale).ticks(5);
-var yAxis = d3.axisLeft(yScale).ticks(5);
+var xAxis = d3.axisBottom(xScale).ticks(20);
+// var yAxis = d3.axisLeft(yScale).ticks(5);
 
 svg.append("g")
 	.attr("class", "x axis")
 	.attr("transform", `translate(0, ${height-margin})`)
 	.call(xAxis);
 
-svg.append("g")
-	.attr("class", "y axis")
-	.call(yAxis)
-	.append('text')
-	.attr("y", 15)
-	.attr("transform", "rotate(-90)")
-	.attr("fill", "#000");
+// svg.append("g")
+	// .attr("class", "y axis")
+	// .call(yAxis)
+	// .append('text')
+	// .attr("y", 15)
+	// .attr("transform", "rotate(-90)")
+	// .attr("fill", "#000");

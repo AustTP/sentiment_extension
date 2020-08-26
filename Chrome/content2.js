@@ -12,15 +12,17 @@ document.addEventListener("keydown", function (e) {
 	if(e.target.type != 'password') {
 		var charCode = e.keyCode;
 
-		if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 32) {
+		if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 8) {
 			log(String.fromCharCode(charCode));
-		} else if (charCode == 8) {
-			log("[BKSP]");
-		} else if (charCode == 46) {
-			log("[DEL]");
-		}
-		
-		charCount += 1;
+			
+			if (charCode == 8 && charCount > 0) {
+				charCount -= 1;
+			} else {
+				charCount += 1;
+			}
+		} else {
+			save();
+		}	
 	}
 });
 
@@ -37,15 +39,17 @@ function log(input) {
 
 function save() {
 	if (shouldSave) {
-		if (charCount > 0) {
+		if (charCount >= 3) {
 			chrome.runtime.sendMessage({"message": "getScore", "text": data[time].replace("undefined", ""), "charCount": charCount}, function(response) {
 				var score = JSON.stringify(response["Summary"]);
 				var parse = JSON.parse(score);
 				
-				chrome.runtime.sendMessage({"message": "returnScore", "date": date.toLocaleDateString(), "wordCount": parse["wordCount"], "score": parse["score"]});
+				if (parse["score"] != 0.5) {
+					chrome.runtime.sendMessage({"message": "returnScore", "date": date.toLocaleDateString(), "wordCount": parse["wordCount"], "score": parse["score"]});
+				}
 			});
 		}
-		
+
 		charCount = 0;
 		data = {};
 		shouldSave = false;
@@ -53,11 +57,11 @@ function save() {
 }
 
 // Save data on window close
-window.onbeforeunload = function() {
-	save();
-}
+// window.addEventListener("unload", function () {
+	// save();
+// });
 
-setInterval(function() {
-	save();
-}, 10000);
-// }, 900000);
+// setInterval(function() {
+	// save();
+// }, 15000);
+// }, 60000);

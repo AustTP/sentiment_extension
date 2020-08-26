@@ -2,31 +2,50 @@ var data = [
 	{
 		name: "USA",
 			values: [
-				{date: "2000", price: "100"},
-				{date: "2001", price: "110"},
-				{date: "2002", price: "145"},
-				{date: "2003", price: "241"},
-				{date: "2004", price: "101"},
-				{date: "2005", price: "90"},
-				{date: "2006", price: "10"},
-				{date: "2007", price: "35"},
-				{date: "2008", price: "21"},
-				{date: "2009", price: "201"}
+				{date: "1", price: "100"},
+				{date: "2", price: "10"},
+				{date: "3", price: "45"},
+				{date: "4", price: "41"},
+				{date: "5", price: "60"},
+				{date: "6", price: "90"},
+				{date: "7", price: "10"},
+				{date: "8", price: "35"},
+				{date: "9", price: "21"},
+				{date: "10", price: "60"},
+				{date: "11", price: "100"},
+				{date: "12", price: "10"},
+				{date: "13", price: "45"},
+				{date: "14", price: "41"},
+				{date: "15", price: "60"},
+				{date: "16", price: "90"},
+				{date: "17", price: "10"},
+				{date: "18", price: "35"},
+				{date: "19", price: "21"},
+				{date: "20", price: "100"},
+				{date: "21", price: "100"},
+				{date: "22", price: "10"},
+				{date: "23", price: "45"},
+				{date: "24", price: "41"},
+				{date: "25", price: "60"},
+				{date: "26", price: "90"},
+				{date: "27", price: "10"},
+				{date: "28", price: "35"},
+				{date: "29", price: "21"},
+				{date: "30", price: "40"},
+				{date: "31", price: "30"}
 			]
 	},
 	{
 		name: "Canada",
 			values: [
-				{date: "2000", price: "200"},
-				{date: "2001", price: "120"},
-				{date: "2002", price: "33"},
-				{date: "2003", price: "21"},
-				{date: "2004", price: "51"},
-				{date: "2005", price: "190"},
-				{date: "2006", price: "120"},
-				{date: "2007", price: "85"},
-				{date: "2008", price: "221"},
-				{date: "2009", price: "101"}
+				{date: "1", price: "30"},
+				{date: "2", price: "40"},
+				{date: "3", price: "75"},
+				{date: "4", price: "21"},
+				{date: "5", price: "80"},
+				{date: "6", price: "60"},
+				{date: "7", price: "20"},
+				{date: "8", price: "95"}
 			]
 	}
 ];
@@ -36,43 +55,37 @@ var height = 300;
 var margin = 50;
 var duration = 250;
 
-var lineOpacity = "0.25";
-var lineOpacityHover = "0.85";
-var otherLinesOpacityHover = "0.1";
-var lineStroke = "1.5px";
-var lineStrokeHover = "2.5px";
+var lineOpacity = "1";
+var lineStroke = "2px";
 
-var circleOpacity = '0.85';
-var circleOpacityOnLineHover = "0.25"
+var circleOpacity = '1';
 var circleRadius = 3;
-var circleRadiusHover = 6;
 
 /* Format Data */
-var parseDate = d3.timeParse("%Y");
+// var parseDate = d3.timeParse("%Y");
 
 data.forEach(function(d) { 
 	d.values.forEach(function(d) {
-		d.date = parseDate(d.date);
+		d.date = +d.date;
 		d.price = +d.price;    
 	});
 });
 
-
 /* Scale */
 var xScale = d3.scaleTime()
 	.domain(d3.extent(data[0].values, d => d.date))
-	.range([0, width-margin]);
+	.range([0, width - margin]);
 
 var yScale = d3.scaleLinear()
 	.domain([0, d3.max(data[0].values, d => d.price)])
-	.range([height-margin, 0]);
+	.range([height - margin, 0]);
 
-var color = d3.scaleOrdinal(d3.schemeCategory10);
+var color = ["#E3E2E7", "#6772CD"];
 
 /* Add SVG */
 var svg = d3.select("#chart").append("svg")
-	.attr("width", (width+margin)+"px")
-	.attr("height", (height+margin)+"px")
+	.attr("width", (width+margin) + "px")
+	.attr("height", (height+margin) + "px")
 	.append('g')
 	.attr("transform", `translate(${margin}, ${margin})`);
 
@@ -88,86 +101,28 @@ lines.selectAll('.line-group')
 	.data(data).enter()
 	.append('g')
 	.attr('class', 'line-group')  
-	.on("mouseover", function(d, i) {
-		svg.append("text")
-			.attr("class", "title-text")
-			.style("fill", color(i))        
-			.text(d.name)
-			.attr("text-anchor", "middle")
-			.attr("x", (width-margin)/2)
-			.attr("y", 5);
-	})
 	
-	.on("mouseout", function(d) {
-		svg.select(".title-text").remove();
-	})
 	.append('path')
 	.attr('class', 'line')  
 	.attr('d', d => line(d.values))
-	.style('stroke', (d, i) => color(i))
-	.style('opacity', lineOpacity)
-	
-	.on("mouseover", function(d) {
-		d3.selectAll('.line').style('opacity', otherLinesOpacityHover);
-		d3.selectAll('.circle').style('opacity', circleOpacityOnLineHover);
-		d3.select(this)
-			.style('opacity', lineOpacityHover)
-			.style("stroke-width", lineStrokeHover)
-			.style("cursor", "pointer");
-	})
-	
-	.on("mouseout", function(d) {
-		d3.selectAll(".line").style('opacity', lineOpacity);
-		d3.selectAll('.circle').style('opacity', circleOpacity);
-		d3.select(this).style("stroke-width", lineStroke).style("cursor", "none");
-	});
+	.style('stroke', (d, i) => color[i])
+	.style('opacity', lineOpacity);
 
 /* Add circles in the line */
 lines.selectAll("circle-group")
 	.data(data).enter()
 	.append("g")
-	.style("fill", (d, i) => color(i))
+	.style("fill", (d, i) => color[i])
 	.selectAll("circle")
 	.data(d => d.values).enter()
 	.append("g")
 	.attr("class", "circle")  
-	.on("mouseover", function(d) {
-		d3.select(this)     
-			.style("cursor", "pointer")
-			.append("text")
-			.attr("class", "text")
-			.text(`${d.price}`)
-			.attr("x", d => xScale(d.date) + 5)
-			.attr("y", d => yScale(d.price) - 10);
-	})
-	
-	.on("mouseout", function(d) {
-		d3.select(this)
-			.style("cursor", "none")  
-			.transition()
-			.duration(duration)
-			.selectAll(".text").remove();
-	})
 	
 	.append("circle")
 	.attr("cx", d => xScale(d.date))
 	.attr("cy", d => yScale(d.price))
 	.attr("r", circleRadius)
-	.style('opacity', circleOpacity)
-	.on("mouseover", function(d) {
-		d3.select(this)
-			.transition()
-			.duration(duration)
-			.attr("r", circleRadiusHover);
-	})
-	
-	.on("mouseout", function(d) {
-		d3.select(this) 
-			.transition()
-			.duration(duration)
-			.attr("r", circleRadius);  
-	});
-
+	.style('opacity', circleOpacity);
 
 /* Add Axis into SVG */
 var xAxis = d3.axisBottom(xScale).ticks(5);
@@ -184,5 +139,4 @@ svg.append("g")
 	.append('text')
 	.attr("y", 15)
 	.attr("transform", "rotate(-90)")
-	.attr("fill", "#000")
-	.text("Total values");
+	.attr("fill", "#000");

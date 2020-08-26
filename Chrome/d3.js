@@ -21,7 +21,7 @@ var data = [
 				{date: "17", price: "10"},
 				{date: "18", price: "35"},
 				{date: "19", price: "21"},
-				{date: "20", price: "100"},
+				{date: "20", price: "70"},
 				{date: "21", price: "100"},
 				{date: "22", price: "10"},
 				{date: "23", price: "45"},
@@ -50,9 +50,9 @@ var data = [
 	}
 ];
 
-var width = 500;
+var width = 550;
 var height = 300;
-var margin = 50;
+var margin = 25;
 var duration = 250;
 
 var lineOpacity = "1";

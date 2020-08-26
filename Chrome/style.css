@@ -87,3 +87,22 @@ svg {
 .title-text {
   font-size: 12px;
 }
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+g line {
+  stroke: #FFF;
+  stroke-opacity: 1;
+}
+
+g path {
+  stroke-width: 0;
+}
+
+/*.axis-grid line {
+  stroke: #def;
+}*/

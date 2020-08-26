@@ -52,8 +52,11 @@ var data = [
 
 var width = 550;
 var height = 300;
+// var margin = { top: 0, right: 10, bottom: 20, left: 10 };
 var margin = 25;
 var duration = 250;
+// var INNER_WIDTH  = width - margin.left - margin.right;
+// var INNER_HEIGHT = height - margin.top - margin.bottom;
 
 var lineOpacity = "1";
 var lineStroke = "2px";
@@ -126,8 +129,15 @@ lines.selectAll("circle-group")
 
 /* Add Axis into SVG */
 var xAxis = d3.axisBottom(xScale).ticks(20);
-// var yAxis = d3.axisLeft(yScale).ticks(5);
+var yAxis = d3.axisLeft(yScale).ticks(5);
+// var yAxisGrid = d3.axisLeft(yScale).tickSize(-INNER_WIDTH).tickFormat('').ticks(5);
 
+// Create grids.  
+// svg.append('g')
+	// .attr('class', 'y axis-grid')
+	// .call(yAxisGrid);
+
+// Create axes.
 svg.append("g")
 	.attr("class", "x axis")
 	.attr("transform", `translate(0, ${height-margin})`)

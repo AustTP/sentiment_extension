@@ -55,13 +55,3 @@ function save() {
 		shouldSave = false;
 	}
 }
-
-// Save data on window close
-// window.addEventListener("unload", function () {
-	// save();
-// });
-
-// setInterval(function() {
-	// save();
-// }, 15000);
-// }, 60000);

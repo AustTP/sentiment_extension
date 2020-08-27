@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-	"name": "Web Summarizer",
+	"name": "User Sentiment",
 	"version": "1.1",
 	"content_scripts": [
 	{

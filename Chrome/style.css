@@ -1,7 +1,7 @@
 body {
     background-color: #FFFFFF;
     min-width: 607px;
-	min-height: 357px;
+	min-height: 381px;
   }
 
 div {
@@ -95,7 +95,7 @@ p {
     margin: 0 auto;
     z-index: 1000;
     position: relative;
-    top: 140px;
+    top: 155px;
     border-top: 10px solid rgb(47, 0, 100);
     border-radius: 50%;
     width: 50px;

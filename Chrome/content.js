@@ -65,7 +65,7 @@ setInterval(function() {
 	var now = Math.round(new Date().getTime() / 1000);
 	
 	temp = temp.filter(function(item) {
-		return now < item.time + 60;
+		return now < item.time + 55;
 	}); 
 	
 	if (temp.length >= 3) {

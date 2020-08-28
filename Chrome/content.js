@@ -49,7 +49,7 @@ function save() {
 					chrome.runtime.sendMessage({"message": "returnScore", "date": date.toLocaleDateString(), "wordCount": parse["wordCount"], "score": parse["score"]});
 					
 					if (parse["score"] < 0.5) {
-						temp.push({"time": Math.round(date.getTime() / 1000), "score": parse["score"]});
+						temp.push({"time": Math.round(new Date().getTime() / 1000), "score": parse["score"]});
 					}
 				}
 			});
@@ -62,10 +62,10 @@ function save() {
 }
 
 setInterval(function() {
-	var time = Math.round(date.getTime() / 1000);
+	var now = Math.round(new Date().getTime() / 1000);
 	
 	temp = temp.filter(function(item) {
-		return time < item.time + 600;
+		return now < item.time + 600;
 	}); 
 	
 	if (temp.length >= 3) {

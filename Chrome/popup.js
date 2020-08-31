@@ -30,8 +30,8 @@ window.addEventListener("load", function(event) {
 	full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
 	// full.pop();
 	
-	console.log(full);
-	console.log(today);
+	// console.log(full);
+	// console.log(today);
 	
 	setTimeout(function(){
 		// this gives an object with dates as keys

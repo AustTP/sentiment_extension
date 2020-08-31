@@ -32,10 +32,10 @@ window.addEventListener("load", function(event) {
 	// full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
 	// full.pop();
 	
-	console.log(full);
+	// console.log(full);
 	// console.log(today);
 	
-	// setTimeout(function(){
+	setTimeout(function(){
 		// this gives an object with dates as keys
 		const groups = [...full, ...today].reduce((groups, game) => {
 			const data = new Date(game.date);
@@ -66,7 +66,7 @@ window.addEventListener("load", function(event) {
 			addSummaryToUI(formatted, months[d.getMonth()], getMonthName(d.getMonth() - 1))
 			d3js(groupArrays, color);
 		// }, 50);
-	// }, 1000);
+	}, 250);
 });
 
 chrome.runtime.onMessage.addListener (

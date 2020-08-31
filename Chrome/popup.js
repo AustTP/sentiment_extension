@@ -11,8 +11,6 @@ var color = ["#6772CD", "#E3E2E7"];
 var months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
 
 document.addEventListener('DOMContentLoaded', function() {
-	document.getElementById("modal").classList.add("loading");
-	
 	chrome.storage.sync.get(["toSave"], function(logs) {
 		for (var key in logs) {
 			today.push(...logs[key]);
@@ -24,14 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			full.push(...logs[key]);
 		}
 	});
+	
+	document.getElementById("modal").classList.add("loading");
 });
 
 window.addEventListener("load", function(event) {
 	full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
 	// full.pop();
 	
-	// console.log(full);
-	// console.log(today);
+	console.log(full);
+	console.log(today);
 	
 	setTimeout(function(){
 		// this gives an object with dates as keys
@@ -60,10 +60,10 @@ window.addEventListener("load", function(event) {
 		
 		document.getElementById("modal").classList.remove("loading");
 		
-		setTimeout(function(){
+		// setTimeout(function(){
 			addSummaryToUI(formatted, months[d.getMonth()], getMonthName(d.getMonth() - 1))
 			d3js(groupArrays, color);
-		}, 50);
+		// }, 50);
 	}, 1000);
 });
 
@@ -91,6 +91,8 @@ chrome.runtime.onMessage.addListener (
 
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });
+				
+				temp = [];
 			} else {
 				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
 			}

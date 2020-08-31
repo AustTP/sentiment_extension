@@ -30,6 +30,9 @@ window.addEventListener("load", function(event) {
 	full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
 	// full.pop();
 	
+	console.log(full);
+	console.log(today);
+	
 	setTimeout(function(){
 		// this gives an object with dates as keys
 		const groups = [...full, ...today].reduce((groups, game) => {
@@ -68,18 +71,18 @@ chrome.runtime.onMessage.addListener (
 	function (request, sender, sendResponse) {
 		if (request.message === "returnScore") {
 			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
-
-			today = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
+			
+			res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
 
 				const maths = (acc[key].wordCount / (wordCount + acc[key].wordCount) * acc[key].score) + (wordCount / (wordCount + acc[key].wordCount) * score);
-				
+
 				return (acc[key].wordCount += wordCount, acc[key].score = maths.toFixed(2), acc);
 			}, {}));
-
-			let redCars = today.filter(redCars => redCars.date != d.toLocaleDateString());
-			let notRed = today.find(notRed => notRed.date == d.toLocaleDateString());
+			
+			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
+			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
 
 			if (redCars.length > 0) {
 				temp.push(notRed);
@@ -89,7 +92,7 @@ chrome.runtime.onMessage.addListener (
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });
 			} else {
-				chrome.storage.sync.set({"toSave": today}, function() { console.log("Today", today); });
+				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
 			}
 		}
 	}

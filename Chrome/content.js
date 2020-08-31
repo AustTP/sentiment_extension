@@ -65,10 +65,10 @@ setInterval(function() {
 	var now = Math.round(new Date().getTime() / 1000);
 	
 	temp = temp.filter(function(item) {
-		return now < item.time + 55;
+		return now < item.time + 15;
 	}); 
 	
 	if (temp.length >= 3) {
 		alert("Cool yor jets!");
 	}
-}, 30000);
+}, 10000);

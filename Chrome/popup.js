@@ -11,6 +11,8 @@ var color = ["#6772CD", "#E3E2E7"];
 var months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
 
 document.addEventListener('DOMContentLoaded', function() {
+	document.getElementById("modal").classList.add("loading");
+	
 	chrome.storage.sync.get(["toSave"], function(logs) {
 		for (var key in logs) {
 			today.push(...logs[key]);
@@ -22,16 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			full.push(...logs[key]);
 		}
 	});
-	
-	document.getElementById("modal").classList.add("loading");
 });
 
 window.addEventListener("load", function(event) {
 	full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
 	// full.pop();
 	
-	console.log(full);
-	console.log(today);
+	// console.log(full);
+	// console.log(today);
 	
 	setTimeout(function(){
 		// this gives an object with dates as keys
@@ -71,7 +71,7 @@ chrome.runtime.onMessage.addListener (
 	function (request, sender, sendResponse) {
 		if (request.message === "returnScore") {
 			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
-			
+
 			var res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});

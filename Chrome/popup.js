@@ -21,19 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.storage.sync.get(["calendar"], function(logs) {
 		for (var key in logs) {
-			full.push(...logs[key]);
+			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1]))) {
+				full.push(...logs[key]);
+			}
 		}
 	});
 });
 
 window.addEventListener("load", function(event) {
-	full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
+	// full = full.filter(name => (startPatterns.some(pattern => name.date.startsWith(pattern))));
 	// full.pop();
 	
-	// console.log(full);
+	console.log(full);
 	// console.log(today);
 	
-	setTimeout(function(){
+	// setTimeout(function(){
 		// this gives an object with dates as keys
 		const groups = [...full, ...today].reduce((groups, game) => {
 			const data = new Date(game.date);
@@ -64,7 +66,7 @@ window.addEventListener("load", function(event) {
 			addSummaryToUI(formatted, months[d.getMonth()], getMonthName(d.getMonth() - 1))
 			d3js(groupArrays, color);
 		// }, 50);
-	}, 1000);
+	// }, 1000);
 });
 
 chrome.runtime.onMessage.addListener (

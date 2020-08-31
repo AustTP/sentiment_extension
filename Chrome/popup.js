@@ -71,7 +71,7 @@ chrome.runtime.onMessage.addListener (
 	function (request, sender, sendResponse) {
 		if (request.message === "returnScore") {
 			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
-
+			
 			var res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});

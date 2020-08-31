@@ -63,17 +63,17 @@ window.addEventListener("load", function(event) {
 		document.getElementById("modal").classList.remove("loading");
 		
 		// setTimeout(function(){
-			addSummaryToUI(formatted, months[d.getMonth()], getMonthName(d.getMonth() - 1))
 			d3js(groupArrays, color);
+			addSummaryToUI(formatted, months[d.getMonth()], getMonthName(d.getMonth() - 1))
 		// }, 50);
-	}, 250);
+	}, 500);
 });
 
 chrome.runtime.onMessage.addListener (
 	function (request, sender, sendResponse) {
 		if (request.message === "returnScore") {
 			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
-			
+
 			var res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
 				const key = JSON.stringify(r);
 				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener (
 
 				return (acc[key].wordCount += wordCount, acc[key].score = maths.toFixed(2), acc);
 			}, {}));
-			
+
 			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
 			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
 
@@ -93,7 +93,7 @@ chrome.runtime.onMessage.addListener (
 
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });
-				
+
 				temp = [];
 			} else {
 				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });

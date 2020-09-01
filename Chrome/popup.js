@@ -39,17 +39,12 @@ window.addEventListener("load", function(event) {
 		// this gives an object with dates as keys
 		const groups = [...full, ...today].reduce((groups, game) => {
 			const data = new Date(game.date);
-			const previous = data.getMonth();
 			const name = data.getMonth() + 1;
-
-			if (!groups[previous]) {
-				groups[previous] = [];
-			}
 
 			if (!groups[name]) {
 				groups[name] = [];
 			}
-
+			
 			groups[name].push({date: data.getDate(), score: game.score * 100});
 			
 			return groups;

@@ -7,7 +7,7 @@ var merged = [];
 var d = new Date();
 var startPatterns = [d.getMonth() + 1, d.getMonth()];
 var formatted = "as of " + d.toDateString() + " " + d.toLocaleTimeString();
-var color = ["#6772CD", "#E3E2E7"];
+var color = ["#E3E2E7", "#6772CD"];
 var months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
 
 document.addEventListener('DOMContentLoaded', function() {

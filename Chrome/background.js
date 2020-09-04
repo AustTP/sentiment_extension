@@ -1,7 +1,29 @@
+var today = [];
+var full = [];
+var temp = [];
+var d = new Date();
+var startPatterns = [d.getMonth() + 1, d.getMonth()];
+
+document.addEventListener('DOMContentLoaded', function() {
+	chrome.storage.sync.get(["toSave"], function(logs) {
+		for (var key in logs) {
+			today.push(...logs[key]);
+		}
+	});
+	
+	chrome.storage.sync.get(["calendar"], function(logs) {
+		for (var key in logs) {
+			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1]))) {
+				full.push(...logs[key]);
+			}
+		}
+	});
+});
+
 // This block listens for a message from content.js
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {		
-		if(request.message === "getScore") {
+		if (request.message === "getScore") {
 			var url = "http://localhost:8000";
 			var body = request.text;
 			var count = request.count;
@@ -11,6 +33,36 @@ chrome.runtime.onMessage.addListener(
 			.catch(error => console.error(error));
 			
 			return true; // return true to indicate you wish to send a response asynchronously
+		} else if (request.message === "returnScore") {
+			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
+
+			var res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
+				const key = JSON.stringify(r);
+				acc[key] = (acc[key]  || {...r, wordCount: 0, score: 0});
+
+				const maths = (acc[key].wordCount / (wordCount + acc[key].wordCount) * acc[key].score) + (wordCount / (wordCount + acc[key].wordCount) * score);
+
+				return (acc[key].wordCount += wordCount, acc[key].score = maths.toFixed(2), acc);
+			}, {}));
+			
+			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
+			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
+			
+			console.log(redCars);
+			console.log(notRed);
+
+			if (redCars.length > 0) {
+				temp.push(notRed);
+
+				full = full.concat(redCars);
+
+				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
+				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });
+
+				temp = [];
+			} else {
+				chrome.storage.sync.set({"toSave": res}, function() { console.log("Today", res); });
+			}
 		}
 	}
 );

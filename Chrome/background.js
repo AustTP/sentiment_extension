@@ -34,7 +34,6 @@ chrome.runtime.onMessage.addListener(
 			
 			return true; // return true to indicate you wish to send a response asynchronously
 		} else if (request.message === "returnScore") {
-			full = full.filter(blue => blue.date != d.toLocaleDateString());
 			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
 
 			var res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
@@ -56,6 +55,7 @@ chrome.runtime.onMessage.addListener(
 				temp.push(notRed);
 
 				full = full.concat(redCars);
+				full = full.filter(blue => blue.date != d.toLocaleDateString());
 
 				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
 				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });

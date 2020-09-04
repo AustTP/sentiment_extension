@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener("load", function(event) {
 	// full.pop();
 	
-	let o = full.find(o => o.date.startsWith(startPatterns[1]));
-
-	if (!o) { 
-		full.unshift({"date": startPatterns[1] + "/1/" + d.getFullYear(), "wordCount": 0, "score": 0});
-	}
-	
 	setTimeout(function(){
+		let o = full.find(o => o.date.startsWith(startPatterns[1]));
+
+		if (!o) { 
+			full.unshift({"date": startPatterns[1] + "/1/" + d.getFullYear(), "wordCount": 0, "score": 0});
+		}
+	
 		// this gives an object with dates as keys
 		const groups = [...full, ...today].reduce((groups, game) => {
 			const data = new Date(game.date);

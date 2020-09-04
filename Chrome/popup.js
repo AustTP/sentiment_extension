@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener("load", function(event) {
 	// full.pop();
 	
-	let o = full.find(o => o.date.startsWith(startPatterns[1]));  //Find if name exist
+	let o = full.find(o => o.date.startsWith(startPatterns[1]));
 
 	if (!o) { 
 		full.unshift({"date": startPatterns[1] + "/1/" + d.getFullYear(), "wordCount": 0, "score": 0});

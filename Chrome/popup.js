@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.addEventListener("load", function(event) {
-	full = full.filter(blue => blue.date != d.toLocaleDateString());
 	// full.pop();
 	
 	console.log(full);

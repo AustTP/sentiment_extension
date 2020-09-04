@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.storage.sync.get(["calendar"], function(logs) {
 		for (var key in logs) {
-			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1]))) {
+			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1])) && logs[key] != d.toLocaleDateString()) {
 				full.push(...logs[key]);
 			}
 		}
@@ -34,6 +34,7 @@ chrome.runtime.onMessage.addListener(
 			
 			return true; // return true to indicate you wish to send a response asynchronously
 		} else if (request.message === "returnScore") {
+			full = full.filter(blue => blue.date != d.toLocaleDateString());
 			today.push({"date": request.date, "wordCount": request.wordCount, "score": request.score});
 
 			var res = Object.values(today.reduce((acc, {wordCount, score, ...r}) => {
@@ -47,6 +48,9 @@ chrome.runtime.onMessage.addListener(
 			
 			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
 			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
+			
+			console.log(redCars);
+			console.log(notRed);
 
 			if (redCars.length > 0) {
 				temp.push(notRed);

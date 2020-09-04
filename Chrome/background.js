@@ -47,9 +47,6 @@ chrome.runtime.onMessage.addListener(
 			
 			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
 			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
-			
-			console.log(redCars);
-			console.log(notRed);
 
 			if (redCars.length > 0) {
 				temp.push(notRed);

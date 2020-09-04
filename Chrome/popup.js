@@ -29,8 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener("load", function(event) {
 	// full.pop();
 	
-	console.log(full);
-	console.log(today);
+	let o = full.find(o => o.date.startsWith(startPatterns[1]));  //Find if name exist
+
+	if (!o) { 
+		full.unshift({"date": startPatterns[1] + "/1/" + d.getFullYear(), "wordCount": 0, "score": 0});
+	}
 	
 	setTimeout(function(){
 		// this gives an object with dates as keys

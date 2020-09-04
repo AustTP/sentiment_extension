@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.addEventListener("load", function(event) {
+	full = full.filter(blue => blue.date != d.toLocaleDateString());
 	// full.pop();
 	
-	// console.log(full);
-	// console.log(today);
+	console.log(full);
+	console.log(today);
 	
 	setTimeout(function(){
 		// this gives an object with dates as keys
@@ -77,7 +78,7 @@ function getMonthName(monthNumber) {
 }
 
 function d3js(data, color) {
-        var width = 550;
+    var width = 550;
 	var height = 300;
 	var margin = 25;
 

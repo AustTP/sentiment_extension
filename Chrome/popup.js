@@ -57,8 +57,6 @@ window.addEventListener("load", function(event) {
 				values: groups[name]
 			};
 		});
-
-		console.log(groupArrays);
 		
 		document.getElementById("modal").classList.remove("loading");
 		

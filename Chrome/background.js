@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	chrome.storage.sync.get(["calendar"], function(logs) {
 		for (var key in logs) {
-			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1])) && logs[key] != d.toLocaleDateString()) {
+			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1]))) {
 				full.push(...logs[key]);
 			}
 		}

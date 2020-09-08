@@ -52,9 +52,9 @@ chrome.runtime.onMessage.addListener(
 				temp.push(notRed);
 
 				full = full.concat(redCars);
-				full = full.filter(blue => blue.date != d.toLocaleDateString());
+				let blueCars = full.filter(blueCars => blueCars.date != d.toLocaleDateString());
 
-				chrome.storage.sync.set({"calendar": full}, function() { console.log("Calendar", full); });
+				chrome.storage.sync.set({"calendar": blueCars}, function() { console.log("Calendar", blueCars); });
 				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });
 
 				temp = [];

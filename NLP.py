@@ -3,7 +3,6 @@ import json
 from scipy.interpolate import interp1d
 
 import operator
-# set(stopwords.words('english'))
 
 # Synonyms should be treated the same way. Stemmer is an algorithm to bring words to its root word.
 # from nltk.stem import PorterStemmer
@@ -20,8 +19,6 @@ class NLP:
 		# Stemmer (puts pluralized, tensed words/verbs into their root form eg: agreed -> agree, flies -> fli)
 		# self.ps = PorterStemmer()
 		# self.stemSentence()
-
-		# self.stopWords = set(stopwords.words('english'))
 
 		self.createSummary()
 

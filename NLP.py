@@ -1,31 +1,27 @@
 import re
 import json
+from scipy.interpolate import interp1d
 
 import operator
-from nltk.corpus import stopwords
-set(stopwords.words('english'))
-# from nltk.tokenize import word_tokenize, sent_tokenize
-
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+# set(stopwords.words('english'))
 
 # Synonyms should be treated the same way. Stemmer is an algorithm to bring words to its root word.
-from nltk.stem import PorterStemmer
+# from nltk.stem import PorterStemmer
 
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 sid = SentimentIntensityAnalyzer()
 
 class NLP:
-	def __init__(self, html):
+	def __init__(self, html):	
 		self.text = html['text']
 		
 		self.summary = ''
-		
-		# Create dictionary that will hold frequency of words in text - not including stop words
-		self.freqTable = dict()
 
 		# Stemmer (puts pluralized, tensed words/verbs into their root form eg: agreed -> agree, flies -> fli)
-		self.ps = PorterStemmer()
+		# self.ps = PorterStemmer()
+		# self.stemSentence()
 
-		self.stopWords = set(stopwords.words('english'))
+		# self.stopWords = set(stopwords.words('english'))
 
 		self.createSummary()
 
@@ -39,34 +35,19 @@ class NLP:
 				return re.sub('\b+', '', temp)
 
 			self.text = temp
-			
-	# def tally(self, words):
-		# for word in words:
-			# word = word.lower()
-			
-			# if word in self.stopWords:
-				# continue
 				
-			# Pass every word by the stemmer before adding it to our freqTable
-			# It is important to stem every word when going through each sentence before adding the score of the words in it.
-			# word = self.ps.stem(word)
-			
-			# if word in self.freqTable:
-				# self.freqTable[word] += 1
-			# else:
-				# self.freqTable[word] = 1
+	# def stemSentence(self):
+		# word = self.ps.stem(self.text)
+		# self.text = word
 
 	def createSummary(self):
 		try:
 			self.applyBackspace()
 			
-			# Tokenize
-			# words = word_tokenize(self.text)
-
-			# Tally occurrences into freqTable
-			# self.tally(words)
+			score = sid.polarity_scores(self.text)['compound']
+			range = interp1d([-1,1],[0,1])
             
-			self.summary = json.dumps({'wordCount': len(self.text.split()), 'words': self.text, 'score': sid.polarity_scores(self.text)['compound']})
+			self.summary = json.dumps({'wordCount': len(self.text.split()), 'words': self.text, 'score': float(range(score))})
 
 		except Exception as e:
 			print(str(e))

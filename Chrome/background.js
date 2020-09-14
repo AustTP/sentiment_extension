@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener(
 			if (redCars.length > 0) {
 				temp.push(notRed);
 
-				full = full.concat(redCars);
+				full.concat(redCars);
 				let blueCars = full.filter(blueCars => blueCars.date != d.toLocaleDateString());
 
 				chrome.storage.sync.set({"calendar": blueCars}, function() { console.log("Calendar", blueCars); });

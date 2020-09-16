@@ -51,14 +51,14 @@ chrome.runtime.onMessage.addListener(
 				return (acc[key].wordCount += wordCount, acc[key].score = maths.toFixed(2), acc);
 			}, {}));
 			
-			var redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
-			var notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
+			let redCars = res.filter(redCars => redCars.date != d.toLocaleDateString());
+			let notRed = res.find(notRed => notRed.date == d.toLocaleDateString());
 
 			if (redCars.length > 0) {
 				temp.push(notRed);
 
 				var green = full.concat(redCars);
-				var blueCars = green.filter(blueCars => blueCars.date != d.toLocaleDateString());
+				let blueCars = green.filter(blueCars => blueCars.date != d.toLocaleDateString());
 
 				chrome.storage.sync.set({"calendar": blueCars}, function() { console.log("Calendar", blueCars); });
 				chrome.storage.sync.set({"toSave": temp}, function() { console.log("Today", temp); });

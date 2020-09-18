@@ -4,6 +4,22 @@ var temp = [];
 var d = new Date();
 var startPatterns = [d.getMonth() + 1, d.getMonth()];
 
+document.addEventListener('DOMContentLoaded', function() {	
+	chrome.storage.sync.get(["toSave"], function(logs) {	
+		for (var key in logs) {	
+			today.push(...logs[key]);	
+		}	
+	});	
+
+	chrome.storage.sync.get(["calendar"], function(logs) {	
+		for (var key in logs) {	
+			if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1]))) {	
+				full.push(...logs[key]);	
+			}	
+		}	
+	});	
+});
+
 // This block listens for a message from content.js
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {		
@@ -18,20 +34,6 @@ chrome.runtime.onMessage.addListener(
 			
 			return true; // return true to indicate you wish to send a response asynchronously
 		} else if (request.message === "returnScore") {
-			chrome.storage.sync.get(["toSave"], function(logs) {
-				for (var key in logs) {
-					today.push(...logs[key]);
-				}
-			});
-			
-			chrome.storage.sync.get(["calendar"], function(logs) {
-				for (var key in logs) {
-					if (logs.hasOwnProperty(key) && (logs[key].toString().indexOf(startPatterns[0]) || logs[key].toString().indexOf(startPatterns[1]))) {
-						full.push(...logs[key]);
-					}
-				}
-			});
-	
 			full = full.filter((thing, index, self) =>
 				index === self.findIndex((t) => (
 					t.date === thing.date
